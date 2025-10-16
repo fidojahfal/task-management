@@ -15,3 +15,12 @@ export class TaskCreateRequest {
   status: string;
   deadline: string;
 }
+
+export class TaskUpdateRequest {
+  task_id: number;
+  user_id: number;
+  title: string;
+  description: string;
+  status: string;
+  deadline: string;
+}

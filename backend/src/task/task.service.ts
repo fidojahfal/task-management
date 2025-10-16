@@ -1,6 +1,10 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../common/prisma/prisma.service';
-import { TaskCreateRequest, TaskResponse } from '../model/task.model';
+import {
+  TaskCreateRequest,
+  TaskResponse,
+  TaskUpdateRequest,
+} from '../model/task.model';
 import { Login, Task } from '@prisma/client';
 import { ValidationService } from '../common/validation/validation.service';
 import { TaskValidation } from './task.validation';
@@ -22,6 +26,20 @@ export class TaskService {
       deadline: task.deadline,
       created_by: task.created_by,
     };
+  }
+
+  private async checkTaskMustExist(task_id: number): Promise<TaskResponse> {
+    const task = await this.prismaService.task.findUnique({
+      where: {
+        task_id,
+      },
+    });
+
+    if (!task) {
+      throw new HttpException('Task not found', 404);
+    }
+
+    return task;
   }
 
   async create(user: Login, request: TaskCreateRequest): Promise<TaskResponse> {
@@ -48,15 +66,25 @@ export class TaskService {
   }
 
   async getTask(user: Login, task_id: number): Promise<TaskResponse> {
-    const task = await this.prismaService.task.findUnique({
-      where: {
-        task_id,
-      },
-    });
+    const task = await this.checkTaskMustExist(task_id);
 
-    if (!task) {
-      throw new HttpException('Task not found', 404);
-    }
+    return this.toTaskResponse(task);
+  }
+
+  async update(user: Login, request: TaskUpdateRequest): Promise<TaskResponse> {
+    const updateRequest: TaskUpdateRequest = this.validationService.validate(
+      TaskValidation.UPDATE,
+      request,
+    );
+
+    let task = await this.checkTaskMustExist(updateRequest.task_id);
+
+    task = await this.prismaService.task.update({
+      where: {
+        task_id: updateRequest.task_id,
+      },
+      data: updateRequest,
+    });
 
     return this.toTaskResponse(task);
   }
