@@ -28,8 +28,6 @@ export class TaskController {
     @Auth() user: Login,
     @Body() request: TaskCreateRequest,
   ): Promise<WebResponse<TaskResponse>> {
-    console.log(request);
-
     const result = await this.taskService.create(user, request);
 
     return {
