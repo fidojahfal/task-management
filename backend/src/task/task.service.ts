@@ -101,7 +101,7 @@ export class TaskService {
     return task;
   }
 
-  async listTasks(user: Login): Promise<TaskResponse[]> {
+  async listTasks(user: Login, filter: string): Promise<TaskResponse[]> {
     const tasks = await this.prismaService.task.findMany({
       where: {
         OR: [
@@ -112,6 +112,7 @@ export class TaskService {
             created_by: user.user_id,
           },
         ],
+        status: filter,
       },
     });
 

@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { Auth } from '../common/decorator/auth.decorator';
 import { type Login } from '@prisma/client';
@@ -79,8 +80,11 @@ export class TaskController {
 
   @Get('/')
   @HttpCode(200)
-  async listTasks(@Auth() user: Login): Promise<WebResponse<TaskResponse[]>> {
-    const result = await this.taskService.listTasks(user);
+  async listTasks(
+    @Auth() user: Login,
+    @Query('filter') filter: string,
+  ): Promise<WebResponse<TaskResponse[]>> {
+    const result = await this.taskService.listTasks(user, filter);
 
     return {
       data: result,
