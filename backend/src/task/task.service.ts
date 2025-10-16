@@ -88,4 +88,16 @@ export class TaskService {
 
     return this.toTaskResponse(task);
   }
+
+  async remove(user: Login, task_id: number): Promise<TaskResponse> {
+    await this.checkTaskMustExist(task_id);
+
+    const task = await this.prismaService.task.delete({
+      where: {
+        task_id,
+      },
+    });
+
+    return task;
+  }
 }

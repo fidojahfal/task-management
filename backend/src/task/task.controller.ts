@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   Param,
@@ -62,6 +63,19 @@ export class TaskController {
 
     return {
       data: result,
+    };
+  }
+
+  @Delete('/:task_id')
+  @HttpCode(200)
+  async remove(
+    @Auth() user: Login,
+    @Param('task_id', ParseIntPipe) task_id: number,
+  ): Promise<WebResponse<string>> {
+    await this.taskService.remove(user, task_id);
+
+    return {
+      data: 'Success',
     };
   }
 }
