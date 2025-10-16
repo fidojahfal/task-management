@@ -76,4 +76,14 @@ export class TaskController {
       data: 'Success',
     };
   }
+
+  @Get('/')
+  @HttpCode(200)
+  async listTasks(@Auth() user: Login): Promise<WebResponse<TaskResponse[]>> {
+    const result = await this.taskService.listTasks(user);
+
+    return {
+      data: result,
+    };
+  }
 }

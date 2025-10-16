@@ -100,4 +100,21 @@ export class TaskService {
 
     return task;
   }
+
+  async listTasks(user: Login): Promise<TaskResponse[]> {
+    const tasks = await this.prismaService.task.findMany({
+      where: {
+        OR: [
+          {
+            user_id: user.user_id,
+          },
+          {
+            created_by: user.user_id,
+          },
+        ],
+      },
+    });
+
+    return tasks.map((task) => this.toTaskResponse(task));
+  }
 }
