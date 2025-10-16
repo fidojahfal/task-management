@@ -1,5 +1,9 @@
 import { Body, Controller, HttpCode, Post } from '@nestjs/common';
-import { AuthRegisterRequest, AuthResponse } from '../model/auth.model';
+import {
+  AuthLoginRequest,
+  AuthRegisterRequest,
+  AuthResponse,
+} from '../model/auth.model';
 import { WebResponse } from '../model/web.model';
 import { AuthService } from './auth.service';
 
@@ -12,6 +16,18 @@ export class AuthController {
     @Body() request: AuthRegisterRequest,
   ): Promise<WebResponse<AuthResponse>> {
     const result = await this.authService.register(request);
+
+    return {
+      data: result,
+    };
+  }
+
+  @Post('/login')
+  @HttpCode(200)
+  async login(
+    @Body() request: AuthLoginRequest,
+  ): Promise<WebResponse<AuthResponse>> {
+    const result = await this.authService.login(request);
 
     return {
       data: result,

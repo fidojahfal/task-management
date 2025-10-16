@@ -10,3 +10,8 @@ export class AuthResponse {
   username: string;
   token?: string;
 }
+
+export class AuthLoginRequest {
+  username: string;
+  password: string;
+}
