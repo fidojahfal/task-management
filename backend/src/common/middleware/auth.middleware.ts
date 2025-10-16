@@ -9,19 +9,23 @@ export class AuthMiddleware implements NestMiddleware {
     private jwtService: JwtService,
   ) {}
   async use(req: any, res: any, next: (error?: any) => void) {
-    const token = (req.headers['authorization'] as string).split(' ')[1];
-    const payload = await this.jwtService.verifyAsync(token, {
-      secret: process.env.JWT_SECRET,
-    });
+    let token = req.headers['authorization'] as string;
 
-    const user = await this.prismaService.login.findUnique({
-      where: {
-        user_id: payload.user_id,
-      },
-    });
+    if (token) {
+      token = token.split(' ')[1];
+      const payload = await this.jwtService.verifyAsync(token, {
+        secret: process.env.JWT_SECRET,
+      });
 
-    if (user) {
-      req.user = user;
+      const user = await this.prismaService.login.findUnique({
+        where: {
+          user_id: payload.user_id,
+        },
+      });
+
+      if (user) {
+        req.user = user;
+      }
     }
 
     next();
