@@ -11,11 +11,11 @@ export class ErrorFilter implements ExceptionFilter {
   catch(exception: any, host: ArgumentsHost) {
     const response = host.switchToHttp().getResponse();
 
-    if (response instanceof HttpException) {
+    if (exception instanceof HttpException) {
       response.status(exception.getStatus()).json({
-        errors: response.getResponse(),
+        errors: exception.getResponse(),
       });
-    } else if (response instanceof ZodError) {
+    } else if (exception instanceof ZodError) {
       response.status(403).json({
         errors: 'Validation error!',
       });
