@@ -32,7 +32,7 @@ export default function TaskClientPage({ tasks }) {
         <div>
           <div className="d-flex justify-content-between">
             <Dropdown>
-              <DropdownToggle variant="primary">
+              <DropdownToggle variant="secondary">
                 {filter ? filter : "Filter Status"}
               </DropdownToggle>
 
