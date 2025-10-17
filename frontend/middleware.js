@@ -11,8 +11,8 @@ export default async function middleware(request) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
 
-    if(AUTH_PATH.includes(pathname)){
-        return NextResponse.redirect(new URL("/task", request.url));
+    if (token && AUTH_PATH.includes(pathname)) {
+      return NextResponse.redirect(new URL("/task", request.url));
     }
 
     return NextResponse.next();
