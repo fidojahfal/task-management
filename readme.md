@@ -93,3 +93,7 @@ Backend:
 | status      | Varchar(50)  | Not Null                    |
 | deadline    | DateTime     | Not Null                    |
 | created_by  | Int          | Foreign Key, Not Null       |
+
+# Screenshot
+
+![alt text](https://github.com/fidojahfal/task-management/blob/main/screenshot/dashboard.png?raw=true)
