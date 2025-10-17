@@ -48,18 +48,12 @@ export class TaskService {
       request,
     );
 
-    const checkUser = await this.prismaService.login.findUnique({
-      where: {
-        user_id: createRequest.user_id,
-      },
-    });
-
-    if (!checkUser) {
-      throw new HttpException('User not found!', 404);
-    }
-
     const task = await this.prismaService.task.create({
-      data: { ...createRequest, created_by: user.user_id },
+      data: {
+        ...createRequest,
+        created_by: user.user_id,
+        user_id: user.user_id,
+      },
     });
 
     return this.toTaskResponse(task);

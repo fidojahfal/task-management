@@ -9,7 +9,6 @@ export class TaskResponse {
 }
 
 export class TaskCreateRequest {
-  user_id: number;
   title: string;
   description: string;
   status: string;
