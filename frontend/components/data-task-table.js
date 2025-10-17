@@ -9,6 +9,16 @@ export default function DataTaskTable({ tasks }) {
     "In Progress": "text-bg-warning",
     Done: "text-bg-success",
   };
+
+  const toReadableDate = (iso) => {
+    const date = new Date(iso);
+
+    return date.toLocaleString("id-ID", {
+      timeZone: "Asia/Jakarta",
+      dateStyle: "long",
+      timeStyle: "short",
+    });
+  };
   return (
     <Table responsive>
       <thead>
@@ -33,7 +43,7 @@ export default function DataTaskTable({ tasks }) {
                   {task.status}
                 </span>
               </td>
-              <td>{task.deadline}</td>
+              <td>{toReadableDate(task.deadline)}</td>
               <td>
                 <div className="d-flex gap-4">
                   <Button>
