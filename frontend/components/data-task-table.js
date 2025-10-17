@@ -1,5 +1,6 @@
-"use client"
+"use client";
 
+import Link from "next/link";
 import { Button, Table } from "react-bootstrap";
 
 export default function DataTaskTable({ tasks }) {
@@ -35,7 +36,9 @@ export default function DataTaskTable({ tasks }) {
               <td>{task.deadline}</td>
               <td>
                 <div className="d-flex gap-4">
-                  <Button>Update</Button>
+                  <Button>
+                    <Link href={`/task/update/${task.task_id}`}>Update</Link>
+                  </Button>
                   <Button className="btn-danger">Delete</Button>
                 </div>
               </td>

@@ -164,6 +164,60 @@ export async function createTaskAction(prevState, formData) {
   return redirect("/task");
 }
 
+export async function updateTaskAction(id, prevState, formData) {
+  const updateTaskData = {
+    title: formData.get("title"),
+    description: formData.get("description"),
+    status: formData.get("status"),
+    deadline: formData.get("deadline"),
+  };
+
+  if (
+    isInvalidText(updateTaskData.title) ||
+    isInvalidText(updateTaskData.description) ||
+    isInvalidText(updateTaskData.status) ||
+    isInvalidText(updateTaskData.deadline)
+  ) {
+    return {
+      message: "Your input can't be empty or invalid!",
+    };
+  }
+
+  try {
+    const cookiesStore = await cookies();
+    const token = cookiesStore.get("token").value;
+
+    const deadline = new Date(updateTaskData.deadline);
+    deadline.setHours(23, 59, 59);
+
+    updateTaskData.deadline = deadline.toISOString();
+
+    const response = await fetch(`http://localhost:3000/api/tasks/${id}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updateTaskData),
+    });
+
+    console.log(updateTaskData);
+
+    if (!response.ok) {
+      return {
+        message: "Failed to update task!",
+      };
+    }
+  } catch (error) {
+    return {
+      message: "There is an error while creating task!",
+    };
+  }
+
+  revalidatePath("/task");
+  return redirect("/task");
+}
+
 // export async function logout() {
 //   (await cookies()).delete("token");
 //   return redirect("/login");
