@@ -3,7 +3,8 @@
 import { deleteTaskAction } from "@/lib/actions";
 import Link from "next/link";
 import { useState } from "react";
-import { Button, Modal, Table } from "react-bootstrap";
+import { Button, Table } from "react-bootstrap";
+import ModalGeneric from "./modal";
 
 export default function DataTaskTable({ tasks }) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -71,31 +72,13 @@ export default function DataTaskTable({ tasks }) {
           })}
         </tbody>
       </Table>
-      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
-        <div className="modal-header">
-          <h5 className="modal-title">Are you sure want delete this task?</h5>
-          <button
-            type="button"
-            className="btn-close"
-            onClick={() => setShowDeleteModal(false)}
-            aria-label="Close"
-          ></button>
-        </div>
-        <div className="modal-footer">
-          <Button
-            variant="danger"
-            onClick={() => {
-              setShowDeleteModal(false);
-              deleteTaskAction(taskId);
-            }}
-          >
-            Delete
-          </Button>
-          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
-            Cancel
-          </Button>
-        </div>
-      </Modal>
+      <ModalGeneric
+        showModal={showDeleteModal}
+        setShowModal={setShowDeleteModal}
+        action={deleteTaskAction}
+        title={"Are you sure want delete this task?"}
+        id={taskId}
+      />
     </>
   );
 }
