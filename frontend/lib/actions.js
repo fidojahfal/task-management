@@ -238,7 +238,8 @@ export async function deleteTaskAction(id) {
   return redirect("/task");
 }
 
-// export async function logout() {
-//   (await cookies()).delete("token");
-//   return redirect("/login");
-// }
+export async function logoutAction() {
+  const cookiesStore = await cookies();
+  cookiesStore.delete("token");
+  return redirect("/login");
+}
