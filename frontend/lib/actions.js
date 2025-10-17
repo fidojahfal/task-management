@@ -214,6 +214,30 @@ export async function updateTaskAction(id, prevState, formData) {
   return redirect("/task");
 }
 
+export async function deleteTaskAction(id) {
+  try {
+    const cookiesStore = await cookies();
+    const token = cookiesStore.get("token").value;
+
+    const response = await fetch(`http://localhost:3000/api/tasks/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      return redirect("/task?error=failed");
+    }
+  } catch (error) {
+    return redirect("/task?error=failed");
+  }
+
+  revalidatePath("/task");
+  return redirect("/task");
+}
+
 // export async function logout() {
 //   (await cookies()).delete("token");
 //   return redirect("/login");
