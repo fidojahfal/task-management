@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useActionState } from "react";
 import { Button, Card, Form } from "react-bootstrap";
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const [state, formAction, pending] = useActionState(registerAction, {
     message: null,
   });
