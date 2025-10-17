@@ -152,8 +152,6 @@ export async function createTaskAction(prevState, formData) {
         message: "Failed to create task!",
       };
     }
-
-    console.log(createTaskData);
   } catch (error) {
     return {
       message: "There is an error while creating task!",
@@ -200,8 +198,6 @@ export async function updateTaskAction(id, prevState, formData) {
       },
       body: JSON.stringify(updateTaskData),
     });
-
-    console.log(updateTaskData);
 
     if (!response.ok) {
       return {
