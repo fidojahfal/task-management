@@ -2,16 +2,25 @@
 
 import { deleteTaskAction } from "@/lib/actions";
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import ModalGeneric from "./modal";
 
 export default function DataTaskTable({ tasks }) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [taskId, setTaskId] = useState(null);
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const handleShowModal = (id) => {
     setTaskId(id);
     setShowDeleteModal(true);
+  };
+
+  const handleSort = (key) => {
+    let direction = "asc";
+    if (sortConfig.key === key && sortConfig.direction === "asc") {
+      direction = "desc";
+    }
+    setSortConfig({ key, direction });
   };
   const badgeColor = {
     "To Do": "text-bg-danger",
@@ -28,6 +37,27 @@ export default function DataTaskTable({ tasks }) {
       timeStyle: "short",
     });
   };
+
+  const sortedTasks = useMemo(() => {
+    if (!sortConfig.key) return tasks;
+
+    const sorted = [...tasks].sort((a, b) => {
+      const aValue = a[sortConfig.key];
+      const bValue = b[sortConfig.key];
+
+      if (typeof aValue === "string" && typeof bValue === "string") {
+        return aValue.localeCompare(bValue);
+      }
+
+      if (aValue instanceof Date && bValue instanceof Date) {
+        return aValue - bValue;
+      }
+
+      return aValue > bValue ? 1 : -1;
+    });
+
+    return sortConfig.direction === "asc" ? sorted : sorted.reverse();
+  }, [tasks, sortConfig]);
   return (
     <>
       <Table responsive>
@@ -37,12 +67,19 @@ export default function DataTaskTable({ tasks }) {
             <th>Title</th>
             <th>Description</th>
             <th>Status</th>
-            <th>Deadline</th>
+            <th
+              onClick={() => handleSort("deadline")}
+              style={{ cursor: "pointer" }}
+            >
+              Deadline{" "}
+              {sortConfig.key === "deadline" &&
+                (sortConfig.direction === "asc" ? "▲" : "▼")}
+            </th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          {tasks?.map((task, index) => {
+          {sortedTasks?.map((task, index) => {
             return (
               <tr key={task.task_id}>
                 <td>{index + 1}</td>
