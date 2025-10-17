@@ -55,6 +55,18 @@ export default function LoginPage() {
                     placeholder="Password"
                   />
                 </div>
+                <div className="mb-3">
+                  <label className="form-label" htmlFor="cPassword">
+                    Password
+                  </label>
+                  <input
+                    className="form-control"
+                    type="password"
+                    id="cPassword"
+                    name="cPassword"
+                    placeholder="Confirm Password"
+                  />
+                </div>
                 <div className="d-grid gap-2 mt-4">
                   <Button disabled={pending}>
                     {pending ? "Registering..." : "Register"}
