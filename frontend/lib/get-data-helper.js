@@ -25,14 +25,6 @@ export async function getListTask() {
     }
     const responseJson = await response.json();
 
-    return [
-      {
-        task_id: 1,
-        title: "Dummy task",
-        description: "What a dummy task",
-        status: "To Do",
-        deadline: "2025-10-16 18:23:01",
-      },
-    ];
+    return responseJson.data;
   } catch (error) {}
 }
