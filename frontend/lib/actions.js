@@ -1,5 +1,6 @@
 "use server";
 
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 function isInvalidText(text) {
@@ -56,4 +57,54 @@ export async function registerAction(prevState, formData) {
   }
 
   return redirect("/login");
+}
+
+export async function loginAction(prevState, formData) {
+  const loginData = {
+    username: formData.get("username"),
+    password: formData.get("password"),
+  };
+
+  if (isInvalidText(loginData.username) || isInvalidText(loginData.password)) {
+    return {
+      message: "Your input can't be empty or invalid!",
+    };
+  }
+
+  if (loginData.password.length < 8) {
+    return {
+      message: "Your password must be at least 8 characters!",
+    };
+  }
+
+  try {
+    const res = await fetch("http://localhost:3000/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(loginData),
+    });
+
+    if (!res.ok) {
+      return {
+        message: res.errors || "Failed to signing in user!",
+      };
+    }
+    const responseJson = await res.json();
+    const { token } = responseJson.data;
+
+    (await cookies()).set("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 60,
+      path: "/",
+    });
+  } catch (error) {
+    return {
+      message: "There is an error while signing in your account!",
+    };
+  }
+
+  return redirect("/task");
 }
