@@ -108,3 +108,8 @@ export async function loginAction(prevState, formData) {
 
   return redirect("/task");
 }
+
+// export async function logout() {
+//   (await cookies()).delete("token");
+//   return redirect("/login");
+// }
