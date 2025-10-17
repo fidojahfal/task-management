@@ -17,7 +17,6 @@ export class TaskCreateRequest {
 
 export class TaskUpdateRequest {
   task_id: number;
-  user_id: number;
   title: string;
   description: string;
   status: string;
