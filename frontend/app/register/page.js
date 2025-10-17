@@ -1,11 +1,14 @@
 "use client";
 
+import { registerAction } from "@/lib/actions";
 import Link from "next/link";
 import { useActionState } from "react";
 import { Button, Card, Form } from "react-bootstrap";
 
 export default function LoginPage() {
-  const [state, formAction, pending] = useActionState();
+  const [state, formAction, pending] = useActionState(registerAction, {
+    message: null,
+  });
   return (
     <div className="d-flex flex-column min-vh-100 min-vw-100">
       <div className="d-flex flex-grow-1 justify-content-center align-items-center">
@@ -67,8 +70,9 @@ export default function LoginPage() {
                     placeholder="Confirm Password"
                   />
                 </div>
+                <p>{state.message && state.message}</p>
                 <div className="d-grid gap-2 mt-4">
-                  <Button disabled={pending}>
+                  <Button type="submit" disabled={pending}>
                     {pending ? "Registering..." : "Register"}
                   </Button>
                 </div>
