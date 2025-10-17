@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -106,6 +107,60 @@ export async function loginAction(prevState, formData) {
     };
   }
 
+  return redirect("/task");
+}
+
+export async function createTaskAction(prevState, formData) {
+  const createTaskData = {
+    title: formData.get("title"),
+    description: formData.get("description"),
+    status: formData.get("status"),
+    deadline: formData.get("deadline"),
+  };
+
+  if (
+    isInvalidText(createTaskData.title) ||
+    isInvalidText(createTaskData.description) ||
+    isInvalidText(createTaskData.status) ||
+    isInvalidText(createTaskData.deadline)
+  ) {
+    return {
+      message: "Your input can't be empty or invalid!",
+    };
+  }
+
+  try {
+    const cookiesStore = await cookies();
+    const token = cookiesStore.get("token").value;
+
+    const deadline = new Date(createTaskData.deadline);
+    deadline.setHours(23, 59, 59);
+
+    createTaskData.deadline = deadline.toISOString();
+
+    const response = await fetch("http://localhost:3000/api/tasks/create", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(createTaskData),
+    });
+
+    if (!response.ok) {
+      return {
+        message: "Failed to create task!",
+      };
+    }
+
+    console.log(createTaskData);
+  } catch (error) {
+    return {
+      message: "There is an error while creating task!",
+    };
+  }
+
+  revalidatePath("/task");
   return redirect("/task");
 }
 
