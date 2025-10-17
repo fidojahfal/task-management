@@ -50,9 +50,10 @@ export default function CreatePage() {
                     className="form-select"
                     id="status"
                     name="status"
-                    placeholder="Stat"
+                    placeholder="Status"
+                    defaultValue=""
                   >
-                    <option selected>Status Task</option>
+                    <option>Status Task</option>
                     <option value="To Do">To Do</option>
                     <option value="In Progress">In Progress</option>
                     <option value="Done">Done</option>
